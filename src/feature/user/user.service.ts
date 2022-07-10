@@ -47,4 +47,26 @@ export class UserService {
       address,
     );
   }
+  async update(
+    createProfileDto: CreateProfileDto,
+    id: string,
+
+  ): Promise<Profile> {
+    const { postCode, prefecture, city, address1 } = createProfileDto;
+    const profile = await this.profileRepository.findOne(id, {
+      relations: ['user', 'address'],
+    });
+    const addressId = profile.address.id
+    await this.addressRepository.updateAddress(addressId, {
+      postCode,
+      prefecture,
+      city,
+      address1,
+    });
+    return this.profileRepository.updateProfile(id,
+      createProfileDto,
+    );
+  }
+
+
 }

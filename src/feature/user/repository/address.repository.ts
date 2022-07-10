@@ -1,6 +1,6 @@
-import { EntityRepository, Repository } from 'typeorm';
-import { Address } from '../../../entities/address.entity';
-import { addressInfo } from '../interface/addressInfo';
+import { EntityRepository, Repository } from "typeorm";
+import { Address } from "../../../entities/address.entity";
+import { addressInfo } from "../interface/addressInfo";
 
 @EntityRepository(Address)
 export class AddressRepository extends Repository<Address> {
@@ -18,4 +18,17 @@ export class AddressRepository extends Repository<Address> {
     await this.save(address);
     return address;
   }
+  async updateAddress(addressId: string, addressInfo: addressInfo): Promise<Address> {
+    const { postCode, prefecture, city, address1 } = addressInfo;
+    await this.update(addressId, {
+      postCode,
+      prefecture,
+      city,
+      address1,
+      updatedAt: new Date().toISOString(),
+    });
+    return await this.findOne(addressId)
+  }
+
+
 }

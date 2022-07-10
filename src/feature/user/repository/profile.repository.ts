@@ -8,12 +8,6 @@ import { Address } from '../../../entities/address.entity';
 
 @EntityRepository(Profile)
 export class ProfileRepository extends Repository<Profile> {
-  constructor(
-    @InjectRepository(AddressRepository)
-    private addressRepository: AddressRepository,
-  ) {
-    super();
-  }
   async createProfile(
     createProfileDto: CreateProfileDto,
     user: User,
@@ -34,4 +28,24 @@ export class ProfileRepository extends Repository<Profile> {
     await this.save(profile);
     return profile;
   }
+  async updateProfile(
+    id: string,
+    createProfileDto: CreateProfileDto,
+  ): Promise<Profile> {
+    const { lastName, firstName, email, phoneNumber } = createProfileDto;
+
+    await this.update(id, {
+      lastName,
+      firstName,
+      email,
+      phoneNumber,
+      updatedAt: new Date().toISOString(),
+    });
+    const profile = await this.findOne(id, {
+      relations: ['user', 'address'],
+    })
+    delete profile.user.password;
+    return profile
+  }
+
 }
