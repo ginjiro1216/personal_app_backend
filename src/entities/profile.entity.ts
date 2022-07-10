@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Address } from './address.entity';
-import { User } from "./user.entity";
+import { User } from './user.entity';
 
 @Entity()
 export class Profile {

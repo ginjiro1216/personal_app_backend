@@ -6,7 +6,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Profile } from "./profile.entity";
+import { Profile } from './profile.entity';
 
 @Entity()
 export class Address {

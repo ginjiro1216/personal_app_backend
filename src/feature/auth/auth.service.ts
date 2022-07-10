@@ -19,7 +19,7 @@ export class AuthService {
   }
   async signIn(
     credentialsDto: CredentialsDto,
-  ): Promise<{ accessToken: string, is_admin: boolean }> {
+  ): Promise<{ accessToken: string; is_admin: boolean }> {
     const { username, password } = credentialsDto;
     const user = await this.authRepository.findOne({ username });
     if (user && (await bcrypt.compare(password, user.password))) {
@@ -27,7 +27,7 @@ export class AuthService {
       const accessToken = await this.jwtService.sign(payload);
       let is_admin;
       is_admin = user.status === 'ADMIN';
-      return { accessToken, is_admin};
+      return { accessToken, is_admin };
     }
     throw new UnauthorizedException(
       'ユーザー名またはパスワードを確認してください。',

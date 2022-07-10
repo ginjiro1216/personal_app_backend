@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserStatus } from '../feature/auth/user-status.enum';
-import { classToPlain, Exclude } from "class-transformer";
+import { classToPlain, Exclude } from 'class-transformer';
 import { Profile } from './profile.entity';
 
 @Entity()
