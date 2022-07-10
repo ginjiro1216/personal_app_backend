@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserStatus } from '../feature/auth/user-status.enum';
-import { Exclude } from 'class-transformer';
+import { classToPlain, Exclude } from "class-transformer";
 import { Profile } from './profile.entity';
 
 @Entity()
@@ -19,13 +19,12 @@ export class User {
   username: string;
 
   @Column()
-  @Exclude({ toPlainOnly: true })
+  @Exclude()
   password: string;
 
   @Column()
   status: UserStatus;
 
   @OneToOne(() => Profile)
-  @JoinColumn()
   profile: Profile;
 }

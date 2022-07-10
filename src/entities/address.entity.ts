@@ -6,6 +6,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Profile } from "./profile.entity";
 
 @Entity()
 export class Address {
@@ -22,5 +23,14 @@ export class Address {
   city: string;
 
   @Column()
-  address: string;
+  address1: string;
+
+  @Column()
+  createdAt: string;
+
+  @Column()
+  updatedAt: string;
+
+  @OneToOne(() => Profile)
+  profile: Profile;
 }

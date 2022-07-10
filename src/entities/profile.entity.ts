@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Address } from './address.entity';
+import { User } from "./user.entity";
 
 @Entity()
 export class Profile {
@@ -24,6 +25,16 @@ export class Profile {
 
   @Column()
   phoneNumber: string;
+
+  @Column()
+  createdAt: string;
+
+  @Column()
+  updatedAt: string;
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  user: User;
 
   @OneToOne(() => Address)
   @JoinColumn()
