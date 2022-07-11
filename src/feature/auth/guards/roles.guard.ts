@@ -13,7 +13,7 @@ export class RolesGuard implements CanActivate {
     );
 
     if (!requireStatuses) {
-      return true;
+      return false;
     }
     const { user } = ctx.switchToHttp().getRequest();
     return requireStatuses.some((status) => user.status.includes(status));
