@@ -11,7 +11,6 @@ export class UserService {
   constructor(
     private readonly profileRepository: ProfileRepository,
     private readonly addressRepository: AddressRepository,
-    private readonly authRepository: AuthRepository
   ) {}
   async findAll(): Promise<Profile[]> {
     const profile = await this.profileRepository.find({
@@ -22,23 +21,15 @@ export class UserService {
       return profile;
     });
   }
-  async findByUserId(id: string): Promise<Profile> {
-    let response;
-    const found = await this.authRepository.findOne(id, {
-      relations: ['profile'],
+  async findById(id: string): Promise<Profile> {
+    const found = await this.profileRepository.findOne(id, {
+      relations: ['address', 'user'],
     });
     if (!found) {
       throw new NotFoundException();
     }
-    delete found.password;
-
-    if (!found.profile) {
-      response = [];
-    } else {
-      response = found
-    }
-
-    return response;
+    delete found.user.password;
+    return found;
   }
   async create(
     createProfileDto: CreateProfileDto,
