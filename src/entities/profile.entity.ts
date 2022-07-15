@@ -32,11 +32,11 @@ export class Profile {
   @Column()
   updatedAt: string;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, user => user.profile)
   @JoinColumn()
   user: User;
 
-  @OneToOne(() => Address)
+  @OneToOne(() => Address, address => address.profile)
   @JoinColumn()
   address: Address;
 }

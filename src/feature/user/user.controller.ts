@@ -37,7 +37,7 @@ export class UserController {
     @Param("id", ParseUUIDPipe) id: string,
     @GetUser() user: User
   ): Promise<Profile> {
-    const profile = await this.profileService.findById(id);
+    const profile = await this.profileService.findByUserId(id);
     if (profile.user.id === user.id || user.status === "ADMIN") {
       return profile;
     } else {
@@ -61,7 +61,7 @@ export class UserController {
     @Body() createProfileDto: CreateProfileDto,
     @GetUser() user: User
   ): Promise<Profile> {
-    const profile = await this.profileService.findById(id);
+    const profile = await this.profileService.findByUserId(id);
     if (profile.user.id === user.id || user.status === "ADMIN") {
       return await this.profileService.update(createProfileDto, id)
     } else {

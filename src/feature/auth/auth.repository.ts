@@ -12,6 +12,7 @@ export class AuthRepository extends Repository<User> {
     const user = this.create({ username, password: hashPassword, status });
 
     await this.save(user);
+    delete user.password;
     return user;
   }
 }
