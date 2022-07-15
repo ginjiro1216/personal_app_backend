@@ -25,6 +25,6 @@ export class User {
   @Column()
   status: UserStatus;
 
-  @OneToOne(() => Profile)
+  @OneToOne(() => Profile, profile => profile.user)
   profile: Profile;
 }

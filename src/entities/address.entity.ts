@@ -31,6 +31,6 @@ export class Address {
   @Column()
   updatedAt: string;
 
-  @OneToOne(() => Profile)
+  @OneToOne(() => Profile, profile => profile.address)
   profile: Profile;
 }
