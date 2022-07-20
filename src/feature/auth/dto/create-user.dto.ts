@@ -1,10 +1,11 @@
 import {
+  IsEmail,
   IsEnum,
   IsNotEmpty,
   IsString,
   MaxLength,
-  MinLength,
-} from 'class-validator';
+  MinLength
+} from "class-validator";
 import { UserStatus } from '../user-status.enum';
 
 export class CreateUserDto {
@@ -17,6 +18,35 @@ export class CreateUserDto {
   @MaxLength(32)
   password: string;
 
-  @IsEnum(UserStatus)
-  status: UserStatus;
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  phoneNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
+  postCode: string;
+
+  @IsString()
+  @IsNotEmpty()
+  prefecture: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+
+  @IsString()
+  @IsNotEmpty()
+  address1: string;
 }

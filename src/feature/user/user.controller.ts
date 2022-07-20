@@ -18,10 +18,13 @@ import { Profile } from "../../entities/profile.entity";
 import { Role } from "../auth/decorator/role.decorator";
 import { UserStatus } from "../auth/user-status.enum";
 import { RolesGuard } from "../auth/guards/roles.guard";
+import { AuthService } from "../auth/auth.service";
 
 @Controller("user")
 export class UserController {
-  constructor(private readonly profileService: UserService) {
+  constructor(
+    private readonly profileService: UserService,
+  ) {
   }
 
   @Get()
@@ -37,23 +40,14 @@ export class UserController {
     @Param("id", ParseUUIDPipe) id: string,
     @GetUser() user: User
   ): Promise<Profile> {
-    const profile = await this.profileService.findById(id);
-    if (profile.user.id === user.id || user.status === "ADMIN") {
-      return profile;
+    const findUser = await this.profileService.findByUserId(id);
+    if (findUser.id === user.id || user.status === "ADMIN") {
+      return findUser.profile;
     } else {
       throw new HttpException("Forbidden", HttpStatus.FORBIDDEN);
     }
 
   }
-  @Post()
-  @UseGuards(JwtAuthGuard)
-  async create(
-    @Body() createProfileDto: CreateProfileDto,
-    @GetUser() user: User
-  ): Promise<Profile> {
-    return await this.profileService.create(createProfileDto, user);
-  }
-
   @Patch(":id")
   @UseGuards(JwtAuthGuard)
   async update(
@@ -61,8 +55,8 @@ export class UserController {
     @Body() createProfileDto: CreateProfileDto,
     @GetUser() user: User
   ): Promise<Profile> {
-    const profile = await this.profileService.findById(id);
-    if (profile.user.id === user.id || user.status === "ADMIN") {
+    const findUser = await this.profileService.findByUserId(id);
+    if (findUser.id === user.id || user.status === "ADMIN") {
       return await this.profileService.update(createProfileDto, id)
     } else {
       throw new HttpException("Forbidden", HttpStatus.FORBIDDEN);

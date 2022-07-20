@@ -1,19 +1,18 @@
-import { EntityRepository, Repository } from 'typeorm';
-import { CreateProfileDto } from '../dto/create-profile.dto';
-import { Profile } from '../../../entities/profile.entity';
-import { User } from '../../../entities/user.entity';
-import { AddressRepository } from './address.repository';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Address } from '../../../entities/address.entity';
+import { EntityRepository, Repository } from "typeorm";
+import { CreateProfileDto } from "../dto/create-profile.dto";
+import { Profile } from "../../../entities/profile.entity";
+import { User } from "../../../entities/user.entity";
+import { Address } from "../../../entities/address.entity";
+import { CreateUserDto } from "../../auth/dto/create-user.dto";
 
 @EntityRepository(Profile)
 export class ProfileRepository extends Repository<Profile> {
   async createProfile(
-    createProfileDto: CreateProfileDto,
+    createUserDto: CreateUserDto,
     user: User,
     address: Address,
   ): Promise<Profile> {
-    const { lastName, firstName, email, phoneNumber } = createProfileDto;
+    const { lastName, firstName, email, phoneNumber } = createUserDto;
 
     const profile = this.create({
       lastName,
@@ -41,11 +40,9 @@ export class ProfileRepository extends Repository<Profile> {
       phoneNumber,
       updatedAt: new Date().toISOString(),
     });
-    const profile = await this.findOne(id, {
-      relations: ['user', 'address'],
+    return await this.findOne(id, {
+      relations: ['address'],
     })
-    delete profile.user.password;
-    return profile
   }
 
 }
