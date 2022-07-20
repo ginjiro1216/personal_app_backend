@@ -11,6 +11,7 @@ export class UserService {
   constructor(
     private readonly profileRepository: ProfileRepository,
     private readonly addressRepository: AddressRepository,
+    private readonly authRepository: AuthRepository
   ) {}
   async findAll(): Promise<Profile[]> {
     const profile = await this.profileRepository.find({
@@ -31,22 +32,15 @@ export class UserService {
     delete found.user.password;
     return found;
   }
-  async create(
-    createProfileDto: CreateProfileDto,
-    user: User,
-  ): Promise<Profile> {
-    const { postCode, prefecture, city, address1 } = createProfileDto;
-    const address = await this.addressRepository.createAddress({
-      postCode,
-      prefecture,
-      city,
-      address1,
+  async findByUserId(id: string): Promise<User> {
+    const user = await this.authRepository.findOne(id, {
+      relations: ['profile', 'profile.address'],
     });
-    return this.profileRepository.createProfile(
-      createProfileDto,
-      user,
-      address,
-    );
+    if (!user) {
+      throw new NotFoundException();
+    }
+    delete user.password;
+    return user;
   }
   async update(
     createProfileDto: CreateProfileDto,
@@ -54,17 +48,15 @@ export class UserService {
 
   ): Promise<Profile> {
     const { postCode, prefecture, city, address1 } = createProfileDto;
-    const profile = await this.profileRepository.findOne(id, {
-      relations: ['user', 'address'],
-    });
-    const addressId = profile.address.id
+    const user = await this.findByUserId(id);
+    const addressId = user.profile.address.id
     await this.addressRepository.updateAddress(addressId, {
       postCode,
       prefecture,
       city,
       address1,
     });
-    return this.profileRepository.updateProfile(id,
+    return this.profileRepository.updateProfile(user.profile.id,
       createProfileDto,
     );
   }
